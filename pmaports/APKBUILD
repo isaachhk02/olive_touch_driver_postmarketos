@@ -1,0 +1,33 @@
+# Contributor: ported from Xiaomi ITK9881H driver (msm-4.9) -> mainline
+pkgname=linux-xiaomi-olive-itk9881h
+pkgver=2.3.1.0
+pkgrel=0
+pkgdesc="Ilitek ITK9881H SPI touch driver for Xiaomi Redmi 8 (olive)"
+url="https://postmarketos.org"
+arch="aarch64"
+license="GPL-2.0-only"
+depends="linux-xiaomi-olive"
+makedepends="linux-xiaomi-olive-dev kmod"
+source="ilitek_spi.c::git+https://github.com/.../olive-touch-driver-postmarketos.git
+        ilitek_core.h
+        olive-touchscreen.dtsi
+        Makefile
+        Kconfig"
+builddir="$srcdir"
+
+build() {
+    # Build against the linux-xiaomi-olive kernel tree.
+    # Requires the kernel headers of linux-xiaomi-olive (pkgrel-matched).
+    make -C /usr/lib/modules/$(uname -r)/build M="$PWD" \
+        ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+        CONFIG_TOUCHSCREEN_ITK9881H=m
+}
+
+package() {
+    make -C /usr/lib/modules/$(uname -r)/build M="$PWD" \
+        ARCH=arm64 INSTALL_MOD_PATH="$pkgdir" modules_install
+    rm -f "$pkgdir"/lib/modules/*/build \
+          "$pkgdir"/lib/modules/*/source
+    # Depmod
+    find "$pkgdir" -name '*.ko' -exec xz {} +
+}

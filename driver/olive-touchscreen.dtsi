@@ -1,0 +1,54 @@
+/*
+ * Touchscreen DT node for Xiaomi Redmi 8 (olive) — PostMarketOS 26.06
+ *
+ * Reverse-engineered from Firmware/images/boot.img DTB:
+ *   Model: Qualcomm MSM8937 (Snapdragon 439) + PMI632
+ *   Touch controller: Ilitek ITK9881H (ILI9881H) on SPI3 CS0
+ *   Reset GPIO:  tlmm gpio64
+ *   IRQ GPIO:    tlmm gpio65 (level, rising edge)
+ *   SPI clock:   10 MHz, SPI_MODE_0, CS active high
+ *   Regulators:  vdd / vcc @ 1800000 uV
+ *   Panel:       720 x 1520, 18 x 32 sense channels
+ */
+
+&spi_3 {
+	status = "okay";
+
+	ilitek@0 {
+		compatible = "tchip,ilitek";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+
+		touch,reset-gpio = <&tlmm 64 0x00>;
+		touch,irq-gpio   = <&tlmm 65 0x2001>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 0x0>;
+
+		touchpanel,max-num-support = <10>;
+		touchpanel,tx-rx-num = <18 32>;
+		touchpanel,panel-coords = <720 1520>;
+		touchpanel,display-coords = <720 1520>;
+
+		pinctrl-names = "active", "suspend";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+
+		incell_screen;
+		edge_limit_support;
+		black_gesture_support;
+		charger_pump_support;
+		esd_handle_support;
+		black_gesture_test_support;
+		noflash_support;
+		smart_gesture_support;
+
+		spi-cpol;
+		spi-cpha;
+		spi-cs-high;
+
+		touchpanel,button-type = <4>;
+
+		vdd-supply = <&pm8937_l10>;
+		vcc-supply = <&pm8937_l10>;
+	};
+};

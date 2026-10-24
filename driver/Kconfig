@@ -1,0 +1,11 @@
+config TOUCHSCREEN_ITK9881H
+	tristate "Ilitek ITK9881H SPI touchscreen (Xiaomi Redmi 8 / olive)"
+	depends on SPI && OF && REGULATOR && GPIO_LIB
+	help
+	  Say Y or M here to add support for the Ilitek ITK9881H (ILI9881H)
+	  touch controller used on the Xiaomi Redmi 8 (olive) incell panel.
+
+	  The controller sits on SPI3 (CS0), with reset on gpio64 and IRQ on
+	  gpio65, powered by vdd/vcc at 1.8 V.
+
+	  If unsure, say N.

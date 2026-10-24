@@ -1,0 +1,11 @@
+# deviceinfo additions for Xiaomi Redmi 8 (olive) touch driver
+# Source these into device/testing/device-xiaomi-olive/deviceinfo
+
+deviceinfo_screen_width="720"
+deviceinfo_screen_height="1520"
+deviceinfo_flash_method="fastboot"
+
+# Touch: enable the Ilitek ITK9881H driver in the kernel config
+deviceinfo_kernel_config_fragments="
+  CONFIG_TOUCHSCREEN_ITK9881H=m
+"
